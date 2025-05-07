@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Registration with Popup</title>
+  <style>
+    /* Simple Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+    }
+    .modal-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="openModal">Add User</button>
+
+  <div class="modal" id="userModal">
+    <div class="modal-content">
+      <div class="modal-header">Register User</div>
+      <form id="registerForm">
+        <input type="text" id="name" placeholder="Name" required><br><br>
+        <input type="email" id="email" placeholder="Email" required><br><br>
+        <input type="password" id="password" placeholder="Password" required><br><br>
+        <button type="submit">Submit</button>
+        <button type="button" id="closeModal">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <h3>Registered Users:</h3>
+  <ul id="userList"></ul>
+
+  <script>
+    const modal = document.getElementById("userModal");
+    const openBtn = document.getElementById("openModal");
+    const closeBtn = document.getElementById("closeModal");
+    const form = document.getElementById("registerForm");
+    const userList = document.getElementById("userList");
+
+    openBtn.onclick = () => modal.style.display = "flex";
+    closeBtn.onclick = () => modal.style.display = "none";
+
+    // Load and show existing users
+    function loadUsers() {
+  userList.innerHTML = "";
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  users.forEach((user, i) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${user.name}</td>
+      <td>${user.email}</td>
+    `;
+
+    userList.appendChild(row);
+  });
+}
+
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const user = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+      };
+
+      // Store in localStorage
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      users.push(user);
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Simulated AJAX POST
+      fetch("https://example.com/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      }).then(res => res.json()).catch(err => console.warn("AJAX failed (demo):", err));
+
+      modal.style.display = "none";
+      form.reset();
+      loadUsers();
+    });
+
+    // Load users on first load
+    loadUsers();
+  </script>
+
+</body>
+</html>

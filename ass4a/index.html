@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Medium jQuery Mobile Site</title>
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  </head>
+  <body>
+    <!-- Page 1 -->
+    <div data-role="page" id="page1">
+      <div data-role="header">
+        <h1>Registration Form</h1>
+      </div>
+
+      <div data-role="main" class="ui-content">
+        <form id="form">
+          <label for="name">Name:</label>
+          <input type="text" id="name" placeholder="Enter Name" />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" placeholder="Enter Email" />
+
+          <button type="submit" data-theme="b" id="submitBtn">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div data-role="page" id="page2">
+      <div data-role="header">
+        <h1>Submitted Info</h1>
+      </div>
+
+      <div data-role="main" class="ui-content">
+        <p id="infoDisplay"></p>
+        <a href="#page1" data-role="button">Back</a>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $("#form").submit(function (e) {
+          e.preventDefault();
+
+          const name = $("#name").val().trim();
+          const email = $("#email").val().trim();
+
+          if (name === "" || email === "") {
+            alert("Please fill in both fields.");
+            return;
+          }
+
+          // Show info on page 2
+          $("#infoDisplay").html(`Name: <strong>${name}</strong><br>Email: <strong>${email}</strong>`);
+          $.mobile.changePage("#page2");
+        });
+
+        // Highlight field on focus
+        $("input").on("focus", function () {
+          $(this).css("background", "#eef");
+        }).on("blur", function () {
+          $(this).css("background", "#fff");
+        });
+      });
+    </script>
+  </body>
+</html>
